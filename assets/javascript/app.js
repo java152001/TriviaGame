@@ -43,77 +43,92 @@ var questions = [
         options: ["Haunter", "Hitmonchan", "Wooper", "Mew"],
         correct: "Haunter"}]
 
-var timeout = false;
-
 var questionTrack = 1
 
 var correct = 0;
 var wrong = 0;
 
-var countDown = 11;
+var countDown = 20;
 var intervalId;
-var nextQuestionInterval;
 
 $("#start").on("click", function() {
 
+    //empties the container div
     $("#container").empty();
 
+    //creates a div for the question to go
     var question_space = $("<div>");
     question_space.attr("id","question-space");
-
+    //puts the question div into the container div
     $("#container").html(question_space);
-
+    //creates a div for the timer to go
     var timer_space = $("<div>");
     timer_space.attr("id", "timer-space");
-
+    timer_space.html("<h2>Time Remaining: 00:20</h2>");
+    //adds the timer div to the container
     $("#container").append(timer_space);
-
+    //creates a div for the answers to go
     var answer_space = $("<div>");
     answer_space.attr("id","answer-space");
-
+    //adds the answer space to the div
     $("#container").append(answer_space);
 
-    generateQuestion(questionTrack, 2);
+    //runs the generate questions function to start the game
+    generateQuestion(questionTrack);
 
 });
 
     
-
+// function that basically runs the whole game.  Requires an argument of what question we're on.  Will 
+// take the question that we're on and fill the question space with the proper question and then run the
+// render questions function in order to generate the selections.  Lastly there is a conditional that will
+// check to see what answer was chosen and whether it was correct or not.  Once all the questions are finished
+// will take to a score summary screen.
 function generateQuestion(questionNumber) {
-    $("#question-space").text(questions[questionNumber].question);
+    if (questionNumber < 11) {
 
-    clearInterval(intervalId);
-    intervalId = setInterval(decrement, 1000);
+        $("#question-space").text(questions[questionNumber].question);
+        $("#timer-space").html("<h2>Time Remaining: 00:20</h2>");
 
-    renderAnswers(questionNumber);
+        clearInterval(intervalId);
+        intervalId = setInterval(decrement, 1000);
 
-    var correctAnswer = questions[questionNumber].correct;
+        renderAnswers(questionNumber);
 
-    $(".questions").on("click", function() {
-        if ($(this).text() === correctAnswer) {
-            console.log($(this).attr("data-value"));
-            console.log(correctAnswer);
-            alert("Correct");
-            questionTrack++
-            clearInterval(intervalId);
-            countDown = 11;
-            setTimeout(function() {
-                generateQuestion(questionTrack);
-              }, 3000);
-        }
-        else {
-            console.log($(this).attr("data-value"));
-            console.log(correctAnswer);
-            alert("Wrongzo");
-            questionTrack++;
-            clearInterval(intervalId);
-            countDown = 11;
-            setTimeout(function() {
-                generateQuestion(questionTrack);
-              }, 3000);
-        }
-    });
+        var correctAnswer = questions[questionNumber].correct;
+
+        $(".questions").on("click", function() {
+            if ($(this).text() === correctAnswer) {
+                console.log($(this).attr("data-value"));
+                console.log(correctAnswer);
+                alert("Correct");
+                questionTrack++
+                correct++;
+                clearInterval(intervalId);
+                countDown = 20;
+                setTimeout(function() {
+                    generateQuestion(questionTrack);
+                }, 3000);
+            }
+            else {
+                console.log($(this).attr("data-value"));
+                console.log(correctAnswer);
+                alert("Wrongzo");
+                questionTrack++;
+                wrong++;
+                clearInterval(intervalId);
+                countDown = 20;
+                setTimeout(function() {
+                    generateQuestion(questionTrack);
+                }, 3000);
+            }
+        });
+    }
+        else { 
+            scoreSummary();
+        }    
 }
+
 
 function scoreSummary() {
     $("#question-space").empty();
@@ -142,21 +157,34 @@ function renderAnswers(questionNumber) {
 function decrement() {
 
     countDown--;
-    $("#timer-space").html("<h2>00:" + countDown + "</h2>");
+
+    if (countDown < 10) {
+        countDown = "0" + countDown;
+    }
+
+    $("#timer-space").html("<h2>Time Remaining: 00:" + countDown + "</h2>");
     if (countDown <= 0) {
-        // timeout = true;
-        // get right answer
-        // show it
 
         rightAnswer = questions[questionTrack].correct;
-        alert("Time Up the correct answer was " + rightAnswer);
+
+        $("#question-space").text("Oops times up, the correct answer was " + rightAnswer);
+        $("#timer-space").html("<h2>Time Remaining: 00:00</h2>");
+
         clearInterval(intervalId);
 
         setTimeout(function() {
             generateQuestion(questionTrack);
           }, 3000);
 
-        countDown = 11;
+        questionTrack++;
+
+        wrong++;
+
+        countDown = 20;
     }
 }
-})
+
+function convertTime(){
+
+}
+});
