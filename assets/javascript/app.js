@@ -53,7 +53,7 @@ var questions = [
         question: "Which pokemon evolves when you trade it?",
         options: ["Haunter", "Hitmonchan", "Wooper", "Mew"],
         correct: "Haunter",
-        image: "assets/images/Haunter.jpg"}]
+        image: "assets/images/Haunter.png"}]
 
 var questionTrack = 1
 
@@ -155,7 +155,7 @@ function scoreSummary() {
     clearInterval(intervalId);
     $("#timer-space").empty()
     $("#answer-space").empty();
-    summary = "<h1>Here's how you did! <br>Number Correct: " + correct + "<br>Number Wrong: " + wrong + "</h1>";
+    summary = "Here's how you did! <br>Number Correct: " + correct + "<br>Number Wrong: " + wrong;
     $("#question-space").html(summary);
     var playAgain = $("<h3>");
     playAgain.attr("class", "start")
