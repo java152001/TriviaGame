@@ -159,7 +159,7 @@ function scoreSummary() {
     $("#question-space").html(summary);
     var playAgain = $("<h3>");
     playAgain.attr("class", "start")
-    playAgain.text("Click here if you want to play again!");
+    playAgain.html("<br>Click here if you want to play again!");
     $("#answer-space").append(playAgain);
     questionTrack = 1
     correct = 0;
